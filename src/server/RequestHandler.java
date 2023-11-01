@@ -22,7 +22,13 @@ public class RequestHandler implements HttpHandler {
             } else if (method.equals("POST")) {
             response = handlePost(httpExchange);
             } else {
+            if (method.equals("PUT")) {
+            response = handlePut(httpExchange);
+            } else if (method.equals("DELETE")) {
+            response = handleDelete(httpExchange);
+            } else {
             throw new Exception("Not Valid Request Method");
+            }
             }
         } catch (Exception e) {
             System.out.println("An erroneous request");
@@ -90,9 +96,32 @@ public class RequestHandler implements HttpHandler {
                 response = "No data found for " + value;
             }
         }
+
         return response;
     }
 
+    private String handlePut(HttpExchange httpExchange) throws IOException {
+        InputStream inStream = httpExchange.getRequestBody();
+        Scanner scanner = new Scanner(inStream);
+        String postData = scanner.nextLine();
+        String language = postData.substring(0, postData.indexOf(",")), 
+               year = postData.substring(postData.indexOf(",") + 1);
 
+        String previousYear = data.get(language);
+        String response = "";
+        
+        if (previousYear != null) {
+            response = "Updated entry {" + language + ", " + year + "} (previous year: " + previousYear + ")";
+        } else {
+            response = "Added entry {" + language + ", " + year + "}";
+        }
+        
+        // Store or update data in hashmap
+        data.put(language, year);
+        
+        System.out.println(response);
+        scanner.close();
+        return response;
+    }
 
 }
