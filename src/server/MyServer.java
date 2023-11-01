@@ -31,7 +31,7 @@ public class MyServer {
     );
 
     // TODO: create the context
-    server.createContext("/", new MyHandler(data));
+    server.createContext("/", new RequestHandler(data));
     // TODO: set the executor
     server.setExecutor(threadPoolExecutor);
     // TODO: start the server
