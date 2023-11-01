@@ -30,5 +30,14 @@ public class MyServer {
       0
     );
 
+    // TODO: create the context
+    server.createContext("/", new MyHandler(data));
+    // TODO: set the executor
+    server.setExecutor(threadPoolExecutor);
+    // TODO: start the server
+    server.start();
+
+    System.out.println("Server started on port " + SERVER_PORT);
+
   }
 }
