@@ -48,8 +48,8 @@ public class RequestHandler implements HttpHandler {
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
         if (query != null) {
-                String value = query.substring(query.indexOf("=") + 1);
-                String year = data.get(value); // Retrieve data from hashmap
+            String value = query.substring(query.indexOf("=") + 1);
+            String year = data.get(value); // Retrieve data from hashmap
             if (year != null) {
                 response = year;
                 System.out.println("Queried for " + value + " and found " + year);
@@ -82,6 +82,24 @@ public class RequestHandler implements HttpHandler {
         return response;
     }
 
+    private String handleDelete(HttpExchange httpExchange) throws IOException {
+        String response = "Invalid GET request";
+        URI uri = httpExchange.getRequestURI();
+        String query = uri.getRawQuery();
+        if (query != null) {
+            String value = query.substring(query.indexOf("=") + 1);
+            String year = data.get(value); // Retrieve data from hashmap
+            if (year != null) {
+                data.remove(value);
+                response = "Deleted entry {" + value + ", " + year + "}";
+            } else {
+                response = "No data found for " + value;
+            }
+        }
+
+        return response;
+    }
+
     private String handlePut(HttpExchange httpExchange) throws IOException {
         InputStream inStream = httpExchange.getRequestBody();
         Scanner scanner = new Scanner(inStream);
@@ -103,27 +121,7 @@ public class RequestHandler implements HttpHandler {
         
         System.out.println(response);
         scanner.close();
-        
         return response;
     }
 
-    private String handleDelete(HttpExchange httpExchange) throws IOException {
-        URI uri = httpExchange.getRequestURI();
-        String query = uri.getRawQuery();
-        String response = "";
-        
-        if (query != null) {
-            String value = query.substring(query.indexOf("=") + 1);
-            String year = data.remove(value); // Remove data from hashmap
-            if (year != null) {
-                response = "Deleted entry {" + value + ", " + year + "}";
-                System.out.println(response);
-            } else {
-                response = "No data found for " + value;
-            }
-        } else {
-            response = "Invalid DELETE request";
-        }
-        return response;
-    }
 }
