@@ -32,10 +32,13 @@ public class MyServer {
 
     // TODO: create the context
     server.createContext("/", new RequestHandler(data));
+    server.createContext("/name", new MyHandler());
     // TODO: set the executor
     server.setExecutor(threadPoolExecutor);
     // TODO: start the server
     server.start();
+
+    
 
     System.out.println("Server started on port " + SERVER_PORT);
 
